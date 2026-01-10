@@ -1,13 +1,13 @@
 # this is a comment
 [first_table]
-key_str = "some string"
-key_int = 123
-key_float = 123.456
-key_bool = true
+string = "some string"
+number = 123
+float = 123.456
+boolean = true
 
 # this is another comment
 [second_table]
-key_str = "another string"
-key_int = 456
-key_float = 456.789
-key_bool = false
+string = "another string"
+number = 456
+float = 456.789
+boolean = false

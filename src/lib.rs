@@ -11,7 +11,7 @@ pub enum Value {
 }
 
 impl Value {
-    pub fn as_string(&self) -> Option<&str> {
+    pub(crate) fn as_string(&self) -> Option<&str> {
         if let Value::String(s) = self {
             Some(s)
         } else {
@@ -19,7 +19,7 @@ impl Value {
         }
     }
 
-    pub fn as_i32(&self) -> Option<i32> {
+    pub(crate) fn as_i32(&self) -> Option<i32> {
         if let Value::Integer(i) = self {
             Some(*i)
         } else {
@@ -27,7 +27,7 @@ impl Value {
         }
     }
 
-    pub fn as_f64(&self) -> Option<f64> {
+    pub(crate) fn as_f64(&self) -> Option<f64> {
         if let Value::Float(f) = self {
             Some(*f)
         } else {
@@ -35,7 +35,7 @@ impl Value {
         }
     }
 
-    pub fn as_bool(&self) -> Option<bool> {
+    pub(crate) fn as_bool(&self) -> Option<bool> {
         if let Value::Boolean(b) = self {
             Some(*b)
         } else {
@@ -43,7 +43,7 @@ impl Value {
         }
     }
 
-    pub fn as_char(&self) -> Option<char> {
+    pub(crate) fn as_char(&self) -> Option<char> {
         if let Value::Char(c) = self {
             Some(*c)
         } else {
@@ -60,13 +60,13 @@ struct Table {
 
 #[allow(unused)]
 impl Table {
-    pub fn get(&self, key: &str) -> Option<&Value> {
+    pub(crate) fn get(&self, key: &str) -> Option<&Value> {
         self.fields
             .iter()
             .find_map(|(k, v)| if k == key { Some(v) } else { None })
     }
 
-    pub fn get_as<T>(&self) -> T
+    pub(crate) fn get_as<T>(&self) -> T
 where
         T: for<'a> From<&'a Table>,
     {
@@ -80,7 +80,7 @@ pub struct ParseConfig {
 }
 
 impl ParseConfig {
-    // "Combined" constructor + parse
+    /// Takes a directory path of type String and parses the file immediately
     pub fn from_file(file_path: String) -> Self {
         let mut parser = Self {
             table_l: Vec::new(),
@@ -93,6 +93,31 @@ impl ParseConfig {
 
         parser
     }
+    /// Retrieve table from list of parsed tables
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// #[derive(Debug)]
+    /// #[allow(unused)]
+    /// struct SomeTable {
+    /// string: String,
+    /// number: i32,
+    /// float: f64,
+    /// boolean: bool,
+    /// }
+    ///
+    /// from_table_struct!(SomeTable {
+    /// string: String,
+    /// number: i32,
+    /// float: f64,
+    /// boolean: bool,
+    /// });
+    ///
+    /// let parsed = ParseConfig::from_file("path/to/file.toml".to_string());
+    /// let first_table: SomeTable = parsed.table("first_table").unwrap();
+    /// ```
+
     pub fn table<T>(&self, name: &str) -> Option<T>
 where
         T: FromTable,
@@ -250,17 +275,17 @@ mod tests {
         #[derive(Debug)]
         #[allow(unused)]
         struct SomeTable {
-            key_str: String,
-            key_int: i32,
-            key_float: f64,
-            key_bool: bool,
+            string: String,
+            number: i32,
+            float: f64,
+            boolean: bool,
         }
 
         from_table_struct!(SomeTable {
-            key_str: String,
-            key_int: i32,
-            key_float: f64,
-            key_bool: bool,
+            string: String,
+            number: i32,
+            float: f64,
+            boolean: bool,
         });
 
         let parsed = ParseConfig::from_file("src/test.toml".to_string());

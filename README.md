@@ -15,34 +15,37 @@ of configuration files in Rust projects</em>
 </p>
   
 <p align="center">
-  <a href="#features">Features</a> •
-  <a href="#built-with">Built With</a> •
+  <a href="#examples">Features</a> •
   <a href="#license">License</a>
 </p>  
   
 
 ---
-<div id="features"></div>
+<div id="examples"></div>
 
-## ✨ Features
-+ 🔍 Find music quickly with the "find" feature.
-+ ⌨️ Fast keyboard-based operation, using keybindings that accommodate both Qwerty and Workman layouts.
-+ 🎨 Built in conversion of hex values to rgba.
+## ✨ Examples
+    
+``` rust
+#[derive(Debug)]
+#[allow(unused)]
+struct SomeTable {
+string: String,
+number: i32,
+float: f64,
+boolean: bool,
+}
+
+from_table_struct!(SomeTable {
+string: String,
+number: i32,
+float: f64,
+boolean: bool,
+});
+
+let parsed = ParseConfig::from_file("path/to/file.toml".to_string());
+let first_table: SomeTable = parsed.table("first_table").unwrap();
+```
   
----
-<div id="built-with"></div>
-
-## 🛠️ Built With
-+ [crossterm](https://github.com/crossterm-rs/crossterm)  
-+ [serde](https://github.com/serde-rs/serde)  
-+ [serde_json](https://github.com/serde-rs/json)  
-+ [dirs](https://codeberg.org/dirs/dirs-rs)  
-+ [lofty](https://github.com/serial-ata/lofty-rs)  
-+ [ratatui](https://github.com/ratatui/ratatui)  
-+ [rodio](https://github.com/RustAudio/rodio)  
-+ [walkdir](https://github.com/BurntSushi/walkdir)  
-+ [rand](https://github.com/rust-random/rand)  
-
 ---
 <div id="license"></div>
 

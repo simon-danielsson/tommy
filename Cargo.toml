@@ -1,14 +1,16 @@
 [package]
 name = "tommy"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
-description = "Simple toml parser built to parse .toml configuration files"
+description = "Simple toml parser built to parse configuration files for rust projects"
 authors = ["Simon Danielsson <contact@simondanielsson.se>"]
 license = "MIT"
 repository = "https://github.com/simon-danielsson/tommy"
 keywords = ["toml", "parser", "utility", "utils", "config", "crate", "library" ]
+homepage = "https://www.simondanielsson.se"
 exclude = ["media/"]
 readme = "README.md"
+rust-version = "1.88.0"
 
 [lib]
 name = "tommy"
