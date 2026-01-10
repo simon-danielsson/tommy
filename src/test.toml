@@ -1,9 +1,11 @@
 # this is a comment
-[table-1]
-key1 = "some string"
-key2 = 123
+[first_table]
+key_str = "some string"
+key_int = 123
+key_bool = true
 
 # this is another comment
-[table-2]
-key1 = "another string"
-key2 = 456
+[second_table]
+key_str = "another string"
+key_int = 456
+key_bool = false
