@@ -186,7 +186,7 @@ where
     }
 }
 
-#[allow(unused_macros)]
+#[macro_export]
 macro_rules! from_table_struct {
     ($struct_name:ident { $($field:ident: $type:ty),* $(,)? }) => {
         impl FromTable for $struct_name {
