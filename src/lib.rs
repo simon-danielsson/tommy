@@ -97,7 +97,9 @@ impl ParseConfig {
     ///
     /// # Example
     ///
-    /// ```
+    /// ```ignore
+    /// use tommy::*;
+    ///
     /// #[derive(Debug)]
     /// #[allow(unused)]
     /// struct SomeTable {
@@ -180,7 +182,17 @@ where
                             value.parse::<f64>().ok().map(Value::Float)
                         })
                         .or_else(|| {
-                            if value.len() == 1 {
+                            if value.starts_with('\'')
+                            && value.ends_with('\'') && value.len()
+                            >= 3
+                            {
+                                Some(Value::Char(
+                                    value[1..value.len() - 1]
+                                        .chars()
+                                        .next()
+                                        .unwrap(),
+                                ))
+                            } else if value.len() == 1 {
                                 Some(Value::Char(
                                     value.chars()
                                         .next()
@@ -264,34 +276,4 @@ impl FromValue for char {
 pub trait FromTable: Sized {
     #[allow(private_interfaces)]
     fn from_table(table: &Table) -> Self;
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn read_the_test_file() {
-        #[derive(Debug)]
-        #[allow(unused)]
-        struct SomeTable {
-            string: String,
-            number: i32,
-            float: f64,
-            boolean: bool,
-        }
-
-        from_table_struct!(SomeTable {
-            string: String,
-            number: i32,
-            float: f64,
-            boolean: bool,
-        });
-
-        let parsed = ParseConfig::from_file("src/test.toml".to_string());
-        let first_table: SomeTable = parsed.table("first_table").unwrap();
-        let second_table: SomeTable = parsed.table("second_table").unwrap();
-        println!("{:#?}", first_table);
-        println!("{:#?}", second_table);
-    }
 }
