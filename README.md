@@ -38,41 +38,57 @@ Tommy is dumb, blunt and clunky. It's built for parsing simple configuration fil
 ``` rust
 use tommy::*;
 
-fn main() {
-    macro_rules! config_table {
-        ($nme:ident { $($fld:ident : $typ:ty),* $(,)? }) => {
-            #[derive(Debug)]
-            #[allow(unused)]
-            struct $nme {
-            $($fld: $typ),*
-            }
-            from_table_struct!($nme {
-            $($fld: $typ),*
-            });
-        };
+macro_rules! config_table {
+    ($nme:ident { $($fld:ident : $typ:ty),* $(,)? }) => {
+        #[derive(Debug)]
+        #[allow(unused)]
+        struct $nme {
+        $($fld: $typ),*
+        }
+        from_table_struct!($nme {
+        $($fld: $typ),*
+        });
+    };
+}
+
+config_table!(Cursor {
+    blink: bool,
+    blink_duration: i32,
+});
+
+config_table!(Window {
+    title: String,
+    width: f64,
+    height: f64,
+});
+
+config_table!(Icons {
+    entry: char,
+    exit: char,
+    controls: char,
+});
+
+struct Config {
+    cursor: Cursor,
+    window: Window,
+    icons: Icons,
+}
+
+impl Config {
+    fn new(cursor: Cursor, window: Window, icons: Icons) -> Self {
+        Self {
+            cursor,
+            window,
+            icons,
+        }
     }
+}
 
-    config_table!(Cursor {
-        blink: bool,
-        blink_duration: i32,
-    });
-
-    config_table!(Window {
-        title: String,
-        width: f64,
-        height: f64,
-    });
-
-    config_table!(Icons {
-        entry: char,
-        exit: char,
-        controls: char,
-    });
-
+fn main() {
     let parsed_user = ParseConfig::from_file("test.toml".to_string()).unwrap();
     let parsed_fabk = ParseConfig::from_file("fallback.toml".to_string()).unwrap();
 
-    /// # or instead of using macro
+    /// # or instead of using macro:
     /// let cursor_conf: Cursor = parsed_user
     ///     .table("cursor")
     ///     .or_else(|| parsed_fabk.table("cursor"))
@@ -96,9 +112,11 @@ fn main() {
     load_conf!(window_conf: Window);
     load_conf!(icons_conf: Icons);
 
-    println!("{:#?}", cursor_conf);
-    println!("{:#?}", window_conf);
-    println!("{:#?}", icons_conf);
+    let config: Config = Config::new(cursor_conf, window_conf, icons_conf);
+
+    println!("{:#?}", config.cursor);
+    println!("{:#?}", config.window);
+    println!("{:#?}", config.icons);
 }
 ```
   
