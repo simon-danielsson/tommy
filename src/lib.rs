@@ -81,45 +81,53 @@ pub struct ParseConfig {
 
 impl ParseConfig {
     /// Takes a directory path of type String and parses the file immediately
-    pub fn from_file(file_path: String) -> Self {
+    pub fn from_file(file_path: String) -> Result<Self, Box<dyn std::error::Error>> {
         let mut parser = Self {
             table_l: Vec::new(),
             file_path,
         };
 
-        if let Err(e) = parser.derive_tables() {
-            panic!("error whilst deriving tables: {}", e);
-        }
+        parser.derive_tables()?;
 
-        parser
+        Ok(parser)
     }
     /// Retrieve table from list of parsed tables
     ///
     /// # Example
     ///
-    /// ```ignore
+    /// ``` ignore
     /// use tommy::*;
     ///
     /// #[derive(Debug)]
     /// #[allow(unused)]
-    /// struct SomeTable {
-    /// string: String,
-    /// number: i32,
-    /// float: f64,
-    /// boolean: bool,
+    /// struct Window {
+    /// width: f64,
+    /// height: f64,
+    /// floating: true,
     /// }
-    ///
-    /// from_table_struct!(SomeTable {
-    /// string: String,
-    /// number: i32,
-    /// float: f64,
-    /// boolean: bool,
+    /// from_table_struct!(Window {
+    /// width: f64,
+    /// height: f64,
+    /// floating: true,
     /// });
     ///
-    /// let parsed = ParseConfig::from_file("path/to/file.toml".to_string());
-    /// let first_table: SomeTable = parsed.table("first_table").unwrap();
+    /// #[derive(Debug)]
+    /// #[allow(unused)]
+    /// struct Cursor {
+    /// blink_duration: i32,
+    /// }
+    /// from_table_struct!(Cursor {
+    /// blink_duration: i32,
+    /// });
+    ///
+    /// let parsed = ParseConfig::from_file("test.toml".to_string()).unwrap();
+    /// let window_conf: Window = parsed.table("window").unwrap();
+    /// let cursor_conf: Cursor = parsed.table("cursor").unwrap();
+    /// assert_eq!(window_conf.width, 500.0);
+    /// assert_eq!(window_conf.height, 1200.0);
+    /// assert_eq!(window_conf.floating, true);
+    /// assert_eq!(cursor_conf.blink_duration, 50)
     /// ```
-
     pub fn table<T>(&self, name: &str) -> Option<T>
 where
         T: FromTable,

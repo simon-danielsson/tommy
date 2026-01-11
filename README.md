@@ -42,7 +42,7 @@ float: f64,
 boolean: bool,
 });
 
-let parsed = ParseConfig::from_file("path/to/file.toml".to_string());
+let parsed = ParseConfig::from_file("path/to/file.toml".to_string()).unwrap();
 let first_table: SomeTable = parsed.table("first_table").unwrap();
 ```
   
