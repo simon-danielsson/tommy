@@ -53,7 +53,7 @@ impl Value {
 }
 
 #[derive(Clone)]
-struct Table {
+pub struct Table {
     name: String,
     fields: Vec<(String, Value)>, // field name, field contents
 }
