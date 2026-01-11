@@ -15,7 +15,7 @@ configuration files in Rust projects</em>
 </p>
   
 <p align="center">
-  <a href="#usage">Features</a> •
+  <a href="#usage">Usage</a> •
   <a href="#license">License</a>
 </p>  
   
