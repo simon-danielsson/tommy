@@ -4,7 +4,7 @@
   
 <p align="center">
   <em>A light-weight toml parser for <br>
-configuration files in Rust projects</em>
+configuration files in rust projects.</em>
 </p>
   
 <p align="center">
@@ -15,11 +15,23 @@ configuration files in Rust projects</em>
 </p>
   
 <p align="center">
+  <a href="#Info">Info</a> •
   <a href="#usage">Usage</a> •
   <a href="#license">License</a>
 </p>  
   
 
+---
+<div id="usage"></div>
+
+## 📢 Information
+  
+For my rust programs I was using various serde/toml crates for parsing (what ultimately only were) simple configuration files, and at some point I decided that it was unnecessary.  
+  
+Tommy is dumb, blunt and clunky. It's built for parsing simple configuration files containing tables of integers, strings, chars, floats and booleans - it can't do anything more and it doesn't need to do anything more.  
+  
+If you want to parse basic configuration files without extraneous boilerplate or dependencies, Tommy is here for you.  
+  
 ---
 <div id="usage"></div>
 
