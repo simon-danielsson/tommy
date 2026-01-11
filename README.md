@@ -26,24 +26,49 @@ configuration files in Rust projects</em>
 ## ✨ Examples
     
 ``` rust
+use tommy::*;
+
 #[derive(Debug)]
 #[allow(unused)]
-struct SomeTable {
-string: String,
-number: i32,
-float: f64,
-boolean: bool,
+struct Cursor {
+    blink: bool,
+    blink_duration: i32,
 }
-
-from_table_struct!(SomeTable {
-string: String,
-number: i32,
-float: f64,
-boolean: bool,
+from_table_struct!(Cursor {
+    blink: bool,
+    blink_duration: i32,
 });
 
-let parsed = ParseConfig::from_file("path/to/file.toml".to_string()).unwrap();
-let first_table: SomeTable = parsed.table("first_table").unwrap();
+#[derive(Debug)]
+#[allow(unused)]
+struct Window {
+    title: String,
+    width: f64,
+    height: f64,
+}
+from_table_struct!(Window {
+    title: String,
+    width: f64,
+    height: f64,
+});
+
+fn main() {
+    let parsed_user = ParseConfig::from_file("test.toml".to_string()).unwrap();
+    let parsed_fabk = ParseConfig::from_file("fallback.toml".to_string()).unwrap();
+
+    let cursor_conf: Cursor = parsed_user
+        .table("cursor")
+        .or_else(|| parsed_fabk.table("cursor"))
+        .unwrap();
+    let window_conf: Window = parsed_user
+        .table("cursor")
+        .or_else(|| parsed_fabk.table("window"))
+        .unwrap();
+
+    println!("{:#?}", cursor_conf);
+    println!("{:#?}", window_conf);
+}
+
 ```
   
 ---

@@ -92,42 +92,6 @@ impl ParseConfig {
         Ok(parser)
     }
     /// Retrieve table from list of parsed tables
-    ///
-    /// # Example
-    ///
-    /// ``` ignore
-    /// use tommy::*;
-    ///
-    /// #[derive(Debug)]
-    /// #[allow(unused)]
-    /// struct Window {
-    /// width: f64,
-    /// height: f64,
-    /// floating: true,
-    /// }
-    /// from_table_struct!(Window {
-    /// width: f64,
-    /// height: f64,
-    /// floating: true,
-    /// });
-    ///
-    /// #[derive(Debug)]
-    /// #[allow(unused)]
-    /// struct Cursor {
-    /// blink_duration: i32,
-    /// }
-    /// from_table_struct!(Cursor {
-    /// blink_duration: i32,
-    /// });
-    ///
-    /// let parsed = ParseConfig::from_file("test.toml".to_string()).unwrap();
-    /// let window_conf: Window = parsed.table("window").unwrap();
-    /// let cursor_conf: Cursor = parsed.table("cursor").unwrap();
-    /// assert_eq!(window_conf.width, 500.0);
-    /// assert_eq!(window_conf.height, 1200.0);
-    /// assert_eq!(window_conf.floating, true);
-    /// assert_eq!(cursor_conf.blink_duration, 50)
-    /// ```
     pub fn table<T>(&self, name: &str) -> Option<T>
 where
         T: FromTable,
@@ -135,7 +99,7 @@ where
         self.table_l
             .iter()
             .find(|t| t.name == name)
-            .map(T::from_table)
+            .and_then(T::from_table)
     }
 
     fn derive_tables(&mut self) -> std::io::Result<()> {
@@ -235,53 +199,48 @@ where
 macro_rules! from_table_struct {
     ($struct_name:ident { $($field:ident: $type:ty),* $(,)? }) => {
         impl FromTable for $struct_name {
-        fn from_table(table: &Table) -> Self {
-        $struct_name {
+        fn from_table(table: &Table) -> Option<Self> {
+        Some($struct_name {
         $(
-        $field: {
-        let v = table.get(stringify!($field))
-        .expect(&format!("Missing key: {}", stringify!($field)));
-        // call the correct accessor based on the type
-        <$type>::from_value(v)
-        },
+        $field: table.get(stringify!($field))
+        .and_then(<$type>::from_value)?,
         )*
-        }
+        })
         }
         }
     };
 }
 
 pub trait FromValue: Sized {
-    fn from_value(v: &Value) -> Self;
+    fn from_value(v: &Value) -> Option<Self>;
 }
 
 impl FromValue for String {
-    fn from_value(v: &Value) -> Self {
-        v.as_string().unwrap().to_string()
+    fn from_value(v: &Value) -> Option<Self> {
+        v.as_string().map(|s| s.to_string())
     }
 }
 impl FromValue for i32 {
-    fn from_value(v: &Value) -> Self {
-        v.as_i32().unwrap()
+    fn from_value(v: &Value) -> Option<Self> {
+        v.as_i32()
     }
 }
 impl FromValue for f64 {
-    fn from_value(v: &Value) -> Self {
-        v.as_f64().unwrap()
+    fn from_value(v: &Value) -> Option<Self> {
+        v.as_f64()
     }
 }
 impl FromValue for bool {
-    fn from_value(v: &Value) -> Self {
-        v.as_bool().unwrap()
+    fn from_value(v: &Value) -> Option<Self> {
+        v.as_bool()
     }
 }
 impl FromValue for char {
-    fn from_value(v: &Value) -> Self {
-        v.as_char().unwrap()
+    fn from_value(v: &Value) -> Option<Self> {
+        v.as_char()
     }
 }
 
 pub trait FromTable: Sized {
-    #[allow(private_interfaces)]
-    fn from_table(table: &Table) -> Self;
+    fn from_table(table: &Table) -> Option<Self>;
 }

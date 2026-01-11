@@ -1,0 +1,17 @@
+
+# cursor config
+[cursor]
+blink = true
+blink_duration = 50
+
+# window config
+[window]
+title = "test"
+width = 500.0
+height = 1200.0
+
+# icons config
+[icons]
+entry = 's'
+exit = 'x'
+controls = 'c'
