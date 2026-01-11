@@ -15,15 +15,15 @@ configuration files in Rust projects</em>
 </p>
   
 <p align="center">
-  <a href="#examples">Features</a> •
+  <a href="#usage">Features</a> •
   <a href="#license">License</a>
 </p>  
   
 
 ---
-<div id="examples"></div>
+<div id="usage"></div>
 
-## ✨ Examples
+## ✨ Usage
     
 ``` rust
 use tommy::*;
