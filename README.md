@@ -8,7 +8,8 @@ of configuration files in Rust projects</em>
 </p>
   
 <p align="center">
-    <img src="https://img.shields.io/github/v/release/simon-danielsson/tommy?color=blueviolet&style=flat-square" alt="Latest release" />
+    <img src="https://img.shields.io/crates/v/tommy?style=flat-square&color=blueviolet&link=https%3A%2F%2Fcrates.io%2Fcrates%2Ftommy
+" alt="Crates.io version" />
     <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT License" />
   <img src="https://img.shields.io/badge/Rust-stable-orange?style=flat-square" alt="Rust" />
   <img src="https://img.shields.io/github/last-commit/simon-danielsson/tommy/main?style=flat-square&color=blue" alt="Last commit" />
